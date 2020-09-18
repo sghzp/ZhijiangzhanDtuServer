@@ -192,12 +192,78 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                         object[i] = divide_str_block[i];
                     }
                 }
-                mixingPlantDao.InsertAll("tb_mixing_plant",object);
+
+                java.sql.Connection conn = null;
+                PreparedStatement ps = null;
+                ResultSet rs = null;
+                int count=0;
+                String sql = "SELECT * FROM tb_mixing_plant WHERE STATION_NUM = '" + divide_str_block[0] + "'"+" and  RECORD_ID = '" + divide_str_block[1] + "'"+" and  CLIENT_TIME = '" + clientTime + "'";//查询 通知sql语句
+                try {
+                    conn = JDBCTools.getConnection();
+                    ps = conn.prepareStatement(sql);
+                    rs = ps.executeQuery();
+                    if (rs.next()) {
+                        System.out.println("already in");
+                        count++;
+                    };
+                    if (count==0){
+                        System.out.println("inin2");
+                        mixingPlantDao.InsertAll("tb_mixing_plant",object);
+                    }
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        rs.close();
+                        ps.close();
+                        conn.close();
+                    } catch (SQLException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                }
+
+
                 System.out.println(divide_str1);
 
 
-                ctx.channel().writeAndFlush("#realtimedataok,"+object[8].toString()+",99*\r\n");
-                ctx.channel().writeAndFlush(object[0].toString()+"_"+object[8].toString()+"\r\n");
+                ctx.channel().writeAndFlush("!OK_"+divide_str_block[1]+"_"+divide_str_block[0]+"*\r\n");
+             //   ctx.channel().writeAndFlush(object[0].toString()+"_"+object[8].toString()+"\r\n");
+            }
+            else
+            {
+                java.sql.Connection conn = null;
+                PreparedStatement ps = null;
+                ResultSet rs = null;
+                String sql = "SELECT CurProject FROM tb_deviceinfo WHERE Num = '" + divide_str_block[0] + "';";//查询 通知sql语句
+                try {
+                    conn = JDBCTools.getConnection();
+                    ps = conn.prepareStatement(sql);
+                    rs = ps.executeQuery();
+                    if (rs.next()) {
+                        System.out.println("设备存在");
+                        ctx.channel().writeAndFlush("CON_"+divide_str_block[0]+"*\r\n");
+                    } else {
+                        System.out.println("设备不存在");
+                        ctx.channel().writeAndFlush("CONNOT\r\n");
+                    }
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        rs.close();
+                        ps.close();
+                        conn.close();
+                    } catch (SQLException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                }
+
             }
             //更新上次在线时间
             java.sql.Connection conn = null;
@@ -220,7 +286,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                 }
 
             }
-            ctx.channel().writeAndFlush("CON_01*\r\n");
+
         }
 
     }

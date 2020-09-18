@@ -78,7 +78,13 @@ public class Server {
              * 绑定端口并启动去接收进来的连接
              */
             //绑定端口
-            ChannelFuture future = bootstrap.bind(49005);
+          //  ChannelFuture future = bootstrap.bind(49005);//京沪高速
+            ChannelFuture future = bootstrap.bind(49000);//公路系统
+          //  ChannelFuture future = bootstrap.bind(49003);//铁五院
+
+            //118.190.134.156:3306/jhwayMonitor//京沪高速
+            //139.224.195.10:3306/pilemoniter//公路系统
+            //118.190.134.156:3306/RailwayFifthMonitor//铁五院
 
             System.out.println("start");
             /**

@@ -11,13 +11,15 @@ static{
 }
 -->
 
+
+
 <c3p0-config>
     <!-- C3P0的缺省(默认)配置，
     如果在代码中“ComboPooledDataSource ds = new ComboPooledDataSource();”这样写就表示使用的是C3P0的缺省(默认)配置信息来创建数据源
     -->
     <default-config>
         <property name="driverClass">com.mysql.jdbc.Driver</property>
-        <property name="jdbcUrl">jdbc:mysql://118.190.134.156:3306/jhwayMonitor</property>
+        <property name="jdbcUrl">jdbc:mysql://139.224.195.10:3306/pilemoniter</property>//京沪高速
         <property name="user">root</property>
         <property name="password">dingyuanseu123456</property>
 
@@ -37,7 +39,7 @@ static{
     -->
     <named-config name="MySQL">
         <property name="driverClass">com.mysql.jdbc.Driver</property>
-        <property name="jdbcUrl">jdbc:mysql://118.190.134.156:3306/jhwayMonitor</property>
+        <property name="jdbcUrl">jdbc:mysql://139.224.195.10:3306/pilemoniter</property>
         <property name="user">root</property>
         <property name="password">dingyuanseu123456</property>
 
